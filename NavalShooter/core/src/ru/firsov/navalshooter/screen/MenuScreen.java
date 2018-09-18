@@ -17,7 +17,8 @@ public class MenuScreen extends Base2DScreen{
     Texture img;
     Vector2 pos;
     Vector2 v;
-    Vector2 touch;
+    Vector2 touch = new Vector2(0, 0);
+    Vector2 way = new Vector2();
 
     public MenuScreen(Game game) {
         super(game);
@@ -41,7 +42,14 @@ public class MenuScreen extends Base2DScreen{
         batch.begin();
         batch.draw(img, pos.x, pos.y);
         batch.end();
-        pos.add(touch.cpy().nor().scl(2));
+
+        // difference between actual position of object and place on the screen where we clicked
+        way = touch.cpy().sub(pos.cpy());
+
+        //do it until waypoint
+        if (pos.x != way.x && pos.y != way.y) {
+            pos.add(way.nor().scl(3));
+        }
     }
 
     @Override
