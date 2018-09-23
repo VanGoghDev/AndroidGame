@@ -16,8 +16,8 @@ public class MenuScreen extends Base2DScreen{
     SpriteBatch batch;
     Texture img;
     Vector2 pos;
-    Vector2 v;
     Vector2 touch = new Vector2(0, 0);
+    Vector2 buf = new Vector2();
     Vector2 way = new Vector2();
 
     public MenuScreen(Game game) {
@@ -30,7 +30,7 @@ public class MenuScreen extends Base2DScreen{
         batch = new SpriteBatch();
         img = new Texture("badlogic.jpg");
         pos = new Vector2(0f,0f);
-        v = new Vector2(2f,1f);
+        buf = new Vector2(0f, 0f);
 
     }
 
@@ -39,17 +39,16 @@ public class MenuScreen extends Base2DScreen{
         super.render(delta);
         Gdx.gl.glClearColor(0.3f, 0.4f, 0.7f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        buf.set(touch);
+        way = buf.sub(pos);
+        if (way.len() > 3f) {
+            pos.add(way.nor().scl(3));
+        } else {
+            pos.set(touch);
+        }
         batch.begin();
         batch.draw(img, pos.x, pos.y);
         batch.end();
-
-        // difference between actual position of object and place on the screen where we clicked
-        way = touch.cpy().sub(pos.cpy());
-
-        //do it until waypoint
-        if (pos.x != way.x && pos.y != way.y) {
-            pos.add(way.nor().scl(3));
-        }
     }
 
     @Override
