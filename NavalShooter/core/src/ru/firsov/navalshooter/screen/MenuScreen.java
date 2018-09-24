@@ -36,7 +36,7 @@ public class MenuScreen extends Base2DScreen implements ActionListener{
         bg = new Texture("bg.jpg");
         pos = new Vector2(0f,0f);
         background = new Background(new TextureRegion(bg));
-        atlas = new TextureAtlas("test.pack");
+        atlas = new TextureAtlas("buttonAtlas.pack");
         buttonPlay = new ButtonPlay(atlas, this);
         buttonQuit = new ButtonQuit(atlas, this);
     }
@@ -94,7 +94,7 @@ public class MenuScreen extends Base2DScreen implements ActionListener{
         if (src == buttonQuit) {
             Gdx.app.exit();
         } else if(src == buttonPlay) {
-            //
+            game.setScreen(new GameScreen(game));
         }
     }
 }
