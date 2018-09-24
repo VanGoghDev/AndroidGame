@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
+import ru.firsov.navalshooter.Sprites.ButtonQuit;
 import ru.firsov.navalshooter.base.Base2DScreen;
 import ru.firsov.navalshooter.base.Sprite;
 import ru.firsov.navalshooter.math.Rect;
@@ -15,7 +16,9 @@ public class MenuScreen extends Base2DScreen{
 
 
     Background background;
+    ButtonQuit buttonQuit;
     Texture bg;
+    Texture quit;
     Vector2 pos;
 
     public MenuScreen(Game game) {
@@ -26,8 +29,10 @@ public class MenuScreen extends Base2DScreen{
     public void show(){
         super.show();
         bg = new Texture("bg.jpg");
+        quit = new Texture("ButtonQuit.png");
         pos = new Vector2(0f,0f);
         background = new Background(new TextureRegion(bg));
+        buttonQuit = new ButtonQuit(new TextureRegion(quit));
     }
 
     @Override
@@ -37,12 +42,14 @@ public class MenuScreen extends Base2DScreen{
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
         background.draw(batch);
+        buttonQuit.draw(batch);
         batch.end();
     }
 
     @Override
     protected void resize(Rect worldBounds) {
         background.resize(worldBounds);
+        buttonQuit.resize(worldBounds);
     }
 
     @Override
