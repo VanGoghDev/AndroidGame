@@ -1,4 +1,4 @@
-package ru.firsov.navalshooter.screen;
+package ru.firsov.navalshooter.Sprites;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
@@ -12,7 +12,7 @@ public class Background extends Sprite {
     }
 
     @Override
-    protected void resize(Rect worldBounds) {
+    public void resize(Rect worldBounds) {
         setHeightProportion(worldBounds.getHeight());
         pos.set(worldBounds.pos);
     }

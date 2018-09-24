@@ -8,11 +8,11 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
+import ru.firsov.navalshooter.Sprites.Background;
 import ru.firsov.navalshooter.Sprites.ButtonPlay;
 import ru.firsov.navalshooter.Sprites.ButtonQuit;
 import ru.firsov.navalshooter.base.ActionListener;
 import ru.firsov.navalshooter.base.Base2DScreen;
-import ru.firsov.navalshooter.base.Sprite;
 import ru.firsov.navalshooter.math.Rect;
 
 public class MenuScreen extends Base2DScreen implements ActionListener{

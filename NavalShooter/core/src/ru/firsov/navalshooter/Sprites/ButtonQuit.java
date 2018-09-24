@@ -13,7 +13,7 @@ public class ButtonQuit extends ScaledTouchUpButton {
 
     public ButtonQuit(TextureAtlas atlas, ActionListener actionListener) {
         super(atlas.findRegion("ButtonQuit"), actionListener, 0.9f);
-        setHeightProportion(0.35f);
+        setHeightProportion(0.25f);
     }
 
     public void resize(Rect worldBounds) {

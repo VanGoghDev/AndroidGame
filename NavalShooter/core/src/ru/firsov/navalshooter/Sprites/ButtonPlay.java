@@ -10,7 +10,7 @@ import ru.firsov.navalshooter.math.Rect;
 public class ButtonPlay extends ScaledTouchUpButton {
     public ButtonPlay(TextureAtlas atlas, ActionListener actionListener) {
         super(atlas.findRegion("ButtonStart"), actionListener, 0.9f);
-        setHeightProportion(0.35f);
+        setHeightProportion(0.25f);
     }
 
     public void resize(Rect worldBounds) {
