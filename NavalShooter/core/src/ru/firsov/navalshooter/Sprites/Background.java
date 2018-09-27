@@ -1,4 +1,4 @@
-package ru.firsov.navalshooter.Sprites;
+package ru.firsov.navalshooter.sprites;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 

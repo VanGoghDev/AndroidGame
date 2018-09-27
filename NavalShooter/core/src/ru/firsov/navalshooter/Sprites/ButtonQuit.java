@@ -1,11 +1,9 @@
-package ru.firsov.navalshooter.Sprites;
+package ru.firsov.navalshooter.sprites;
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import ru.firsov.navalshooter.base.ActionListener;
 import ru.firsov.navalshooter.base.ScaledTouchUpButton;
-import ru.firsov.navalshooter.base.Sprite;
 import ru.firsov.navalshooter.math.Rect;
 
 public class ButtonQuit extends ScaledTouchUpButton {

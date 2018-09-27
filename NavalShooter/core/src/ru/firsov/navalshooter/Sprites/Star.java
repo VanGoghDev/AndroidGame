@@ -1,4 +1,4 @@
-package ru.firsov.navalshooter.Sprites;
+package ru.firsov.navalshooter.sprites;
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
@@ -13,9 +13,9 @@ public class Star extends Sprite {
     private Rect worldBounds;
 
     public Star(TextureAtlas atlas) {
-        super(atlas.findRegion("Star"));
+        super(atlas.findRegion("star"));
         v.set(Rnd.nextFloat(-0.005f, 0.005f), Rnd.nextFloat(-0.5f, -0.1f));
-        setHeightProportion(Rnd.nextFloat(0.1f, 0.2f));
+        setHeightProportion(Rnd.nextFloat(0.01f, 0.02f));
     }
 
     @Override
