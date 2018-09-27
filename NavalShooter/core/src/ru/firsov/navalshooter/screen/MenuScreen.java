@@ -8,9 +8,9 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
-import ru.firsov.navalshooter.Sprites.Background;
-import ru.firsov.navalshooter.Sprites.ButtonPlay;
-import ru.firsov.navalshooter.Sprites.ButtonQuit;
+import ru.firsov.navalshooter.sprites.Background;
+import ru.firsov.navalshooter.sprites.ButtonPlay;
+import ru.firsov.navalshooter.sprites.ButtonQuit;
 import ru.firsov.navalshooter.base.ActionListener;
 import ru.firsov.navalshooter.base.Base2DScreen;
 import ru.firsov.navalshooter.math.Rect;
@@ -33,7 +33,7 @@ public class MenuScreen extends Base2DScreen implements ActionListener{
     @Override
     public void show(){
         super.show();
-        bg = new Texture("bg.jpg");
+        bg = new Texture("menuBG.png");
         pos = new Vector2(0f,0f);
         background = new Background(new TextureRegion(bg));
         atlas = new TextureAtlas("buttonAtlas.pack");
