@@ -4,22 +4,27 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
-import ru.firsov.navalshooter.Sprites.ButtonQuit;
+import ru.firsov.navalshooter.sprites.Background;
+import ru.firsov.navalshooter.sprites.ButtonPlay;
+import ru.firsov.navalshooter.sprites.ButtonQuit;
+import ru.firsov.navalshooter.base.ActionListener;
 import ru.firsov.navalshooter.base.Base2DScreen;
-import ru.firsov.navalshooter.base.Sprite;
 import ru.firsov.navalshooter.math.Rect;
 
-public class MenuScreen extends Base2DScreen{
+public class MenuScreen extends Base2DScreen implements ActionListener{
 
 
     Background background;
-    ButtonQuit buttonQuit;
     Texture bg;
-    Texture quit;
     Vector2 pos;
+    TextureAtlas atlas;
+
+    ButtonPlay buttonPlay;
+    ButtonQuit buttonQuit;
 
     public MenuScreen(Game game) {
         super(game);
@@ -28,11 +33,12 @@ public class MenuScreen extends Base2DScreen{
     @Override
     public void show(){
         super.show();
-        bg = new Texture("bg.jpg");
-        quit = new Texture("ButtonQuit.png");
+        bg = new Texture("menuBG.png");
         pos = new Vector2(0f,0f);
         background = new Background(new TextureRegion(bg));
-        buttonQuit = new ButtonQuit(new TextureRegion(quit));
+        atlas = new TextureAtlas("buttonAtlas.pack");
+        buttonPlay = new ButtonPlay(atlas, this);
+        buttonQuit = new ButtonQuit(atlas, this);
     }
 
     @Override
@@ -41,14 +47,25 @@ public class MenuScreen extends Base2DScreen{
         Gdx.gl.glClearColor(0.3f, 0.4f, 0.7f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
-        background.draw(batch);
-        buttonQuit.draw(batch);
+        update(delta);
+        draw();
         batch.end();
+    }
+
+    public void draw() {
+        background.draw(batch);
+        buttonPlay.draw(batch);
+        buttonQuit.draw(batch);
+    }
+
+    public void update(float delta) {
+
     }
 
     @Override
     protected void resize(Rect worldBounds) {
         background.resize(worldBounds);
+        buttonPlay.resize(worldBounds);
         buttonQuit.resize(worldBounds);
     }
 
@@ -58,4 +75,26 @@ public class MenuScreen extends Base2DScreen{
         super.dispose();
     }
 
+    @Override
+    public boolean touchDown(Vector2 touch, int pointer) {
+        buttonPlay.touchDown(touch, pointer);
+        buttonQuit.touchDown(touch, pointer);
+        return super.touchDown(touch, pointer);
+    }
+
+    @Override
+    public boolean touchUp(Vector2 touch, int pointer) {
+        buttonPlay.touchUp(touch, pointer);
+        buttonQuit.touchUp(touch, pointer);
+        return super.touchUp(touch, pointer);
+    }
+
+    @Override
+    public void actionPerformed(Object src) {
+        if (src == buttonQuit) {
+            Gdx.app.exit();
+        } else if(src == buttonPlay) {
+            game.setScreen(new GameScreen(game));
+        }
+    }
 }
