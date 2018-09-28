@@ -8,9 +8,9 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
+import ru.firsov.navalshooter.pool.BulletPool;
 import ru.firsov.navalshooter.sprites.Background;
 import ru.firsov.navalshooter.sprites.MainShip;
-import ru.firsov.navalshooter.sprites.Ship;
 import ru.firsov.navalshooter.sprites.Star;
 import ru.firsov.navalshooter.base.ActionListener;
 import ru.firsov.navalshooter.base.Base2DScreen;
@@ -27,6 +27,8 @@ public class GameScreen extends Base2DScreen implements ActionListener {
     Star[] star;
     MainShip ship;
 
+    BulletPool bulletPool;
+
     public GameScreen(Game game) {
         super(game);
     }
@@ -42,7 +44,8 @@ public class GameScreen extends Base2DScreen implements ActionListener {
         for (int i = 0; i < star.length; i++) {
             star[i] = new Star(atlas);
         }
-        ship = new MainShip(atlas);
+        bulletPool = new BulletPool();
+        ship = new MainShip(atlas, bulletPool);
     }
 
     @Override
@@ -59,6 +62,7 @@ public class GameScreen extends Base2DScreen implements ActionListener {
             star[i].update(delta);
         }
         ship.update(delta);
+        bulletPool.updateActiveObjects(delta);
     }
 
     public void draw() {
@@ -66,10 +70,11 @@ public class GameScreen extends Base2DScreen implements ActionListener {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
         background.draw(batch);
-        ship.draw(batch);
         for (int i = 0; i < star.length; i++) {
             star[i].draw(batch);
         }
+        ship.draw(batch);
+        bulletPool.drawActiveObjects(batch);
         batch.end();
     }
 
@@ -78,7 +83,7 @@ public class GameScreen extends Base2DScreen implements ActionListener {
     }
 
     public void deleteAllDestroyed() {
-
+        bulletPool.freeAllDestroyedActiveObjects();
     }
 
     @Override
@@ -95,6 +100,7 @@ public class GameScreen extends Base2DScreen implements ActionListener {
     public void dispose() {
         bg.dispose();
         atlas.dispose();
+        bulletPool.dispose();
         super.dispose();
     }
 
