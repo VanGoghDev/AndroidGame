@@ -2,6 +2,7 @@ package ru.firsov.navalshooter.screen;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -29,6 +30,8 @@ public class GameScreen extends Base2DScreen implements ActionListener {
 
     BulletPool bulletPool;
 
+    Music music;
+
     public GameScreen(Game game) {
         super(game);
     }
@@ -36,6 +39,9 @@ public class GameScreen extends Base2DScreen implements ActionListener {
     @Override
     public void show() {
         super.show();
+        music = Gdx.audio.newMusic(Gdx.files.internal("sounds/mainMusic.mp3"));
+        music.setLooping(true);
+        music.play();
         bg = new Texture("menuBG2.png");
         background = new Background(new TextureRegion(bg));
         atlas = new TextureAtlas("mainAtlas.tpack");
@@ -101,6 +107,7 @@ public class GameScreen extends Base2DScreen implements ActionListener {
         bg.dispose();
         atlas.dispose();
         bulletPool.dispose();
+        music.dispose();
         super.dispose();
     }
 
