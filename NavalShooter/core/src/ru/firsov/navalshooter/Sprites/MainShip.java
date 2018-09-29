@@ -1,20 +1,28 @@
 package ru.firsov.navalshooter.sprites;
 
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import ru.firsov.navalshooter.base.Sprite;
 import ru.firsov.navalshooter.math.Rect;
+import ru.firsov.navalshooter.pool.BulletPool;
 
 public class MainShip extends Sprite {
 
     private static final int INVALID_POINTER = -1;
+    private final Sound shootSound;
 
     private Vector2 v0 = new Vector2(0.5f, 0f);
     Vector2 v = new Vector2();
+    private Vector2 bulletV = new Vector2(0, 0.5f);
 
     private Rect worldBounds;
+
+    private BulletPool bulletPool;
+    private TextureRegion bulletRegion;
 
     private boolean pressedLeft;
     private boolean pressedRight;
@@ -22,9 +30,12 @@ public class MainShip extends Sprite {
     private int leftPointer = INVALID_POINTER;
     private int rightPointer = INVALID_POINTER;
 
-    public MainShip(TextureAtlas atlas) {
+    public MainShip(TextureAtlas atlas, BulletPool bulletPool, Sound shootSound) {
         super(atlas.findRegion("main_ship"), 1, 2, 2);
+        this.bulletRegion = atlas.findRegion("bulletMainShip");
+        this.shootSound = shootSound;
         setHeightProportion(0.15f);
+        this.bulletPool = bulletPool;
     }
 
     @Override
@@ -93,7 +104,7 @@ public class MainShip extends Sprite {
                 moveRight();
                 break;
             case Input.Keys.UP:
-                frame = 1;
+                shoot();
                 break;
         }
     }
@@ -118,9 +129,6 @@ public class MainShip extends Sprite {
                     stop();
                 }
                 break;
-            case Input.Keys.UP:
-                frame = 0;
-                break;
         }
     }
 
@@ -134,6 +142,12 @@ public class MainShip extends Sprite {
 
     private void stop() {
         v.setZero();
+    }
+
+    public void shoot(){
+        Bullet bullet = bulletPool.obtain();
+        bullet.set(this, bulletRegion, pos, bulletV, 0.01f, worldBounds, 1);
+        shootSound.play();
     }
 
 }

@@ -2,15 +2,17 @@ package ru.firsov.navalshooter.screen;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
+import ru.firsov.navalshooter.pool.BulletPool;
 import ru.firsov.navalshooter.sprites.Background;
 import ru.firsov.navalshooter.sprites.MainShip;
-import ru.firsov.navalshooter.sprites.Ship;
 import ru.firsov.navalshooter.sprites.Star;
 import ru.firsov.navalshooter.base.ActionListener;
 import ru.firsov.navalshooter.base.Base2DScreen;
@@ -27,6 +29,11 @@ public class GameScreen extends Base2DScreen implements ActionListener {
     Star[] star;
     MainShip ship;
 
+    BulletPool bulletPool;
+
+    Music music;
+    Sound laserSound;
+
     public GameScreen(Game game) {
         super(game);
     }
@@ -34,6 +41,10 @@ public class GameScreen extends Base2DScreen implements ActionListener {
     @Override
     public void show() {
         super.show();
+        music = Gdx.audio.newMusic(Gdx.files.internal("sounds/mainMusic.mp3"));
+        music.setLooping(true);
+        music.play();
+        laserSound = Gdx.audio.newSound(Gdx.files.internal("sounds/laser.wav"));
         bg = new Texture("menuBG2.png");
         background = new Background(new TextureRegion(bg));
         atlas = new TextureAtlas("mainAtlas.tpack");
@@ -42,7 +53,8 @@ public class GameScreen extends Base2DScreen implements ActionListener {
         for (int i = 0; i < star.length; i++) {
             star[i] = new Star(atlas);
         }
-        ship = new MainShip(atlas);
+        bulletPool = new BulletPool();
+        ship = new MainShip(atlas, bulletPool, laserSound);
     }
 
     @Override
@@ -59,6 +71,7 @@ public class GameScreen extends Base2DScreen implements ActionListener {
             star[i].update(delta);
         }
         ship.update(delta);
+        bulletPool.updateActiveObjects(delta);
     }
 
     public void draw() {
@@ -66,10 +79,11 @@ public class GameScreen extends Base2DScreen implements ActionListener {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
         background.draw(batch);
-        ship.draw(batch);
         for (int i = 0; i < star.length; i++) {
             star[i].draw(batch);
         }
+        ship.draw(batch);
+        bulletPool.drawActiveObjects(batch);
         batch.end();
     }
 
@@ -78,7 +92,7 @@ public class GameScreen extends Base2DScreen implements ActionListener {
     }
 
     public void deleteAllDestroyed() {
-
+        bulletPool.freeAllDestroyedActiveObjects();
     }
 
     @Override
@@ -95,6 +109,9 @@ public class GameScreen extends Base2DScreen implements ActionListener {
     public void dispose() {
         bg.dispose();
         atlas.dispose();
+        bulletPool.dispose();
+        music.dispose();
+        laserSound.dispose();
         super.dispose();
     }
 
