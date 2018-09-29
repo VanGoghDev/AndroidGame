@@ -3,6 +3,7 @@ package ru.firsov.navalshooter.screen;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -31,6 +32,7 @@ public class GameScreen extends Base2DScreen implements ActionListener {
     BulletPool bulletPool;
 
     Music music;
+    Sound laserSound;
 
     public GameScreen(Game game) {
         super(game);
@@ -42,6 +44,7 @@ public class GameScreen extends Base2DScreen implements ActionListener {
         music = Gdx.audio.newMusic(Gdx.files.internal("sounds/mainMusic.mp3"));
         music.setLooping(true);
         music.play();
+        laserSound = Gdx.audio.newSound(Gdx.files.internal("sounds/laser.wav"));
         bg = new Texture("menuBG2.png");
         background = new Background(new TextureRegion(bg));
         atlas = new TextureAtlas("mainAtlas.tpack");
@@ -51,7 +54,7 @@ public class GameScreen extends Base2DScreen implements ActionListener {
             star[i] = new Star(atlas);
         }
         bulletPool = new BulletPool();
-        ship = new MainShip(atlas, bulletPool);
+        ship = new MainShip(atlas, bulletPool, laserSound);
     }
 
     @Override
@@ -108,6 +111,7 @@ public class GameScreen extends Base2DScreen implements ActionListener {
         atlas.dispose();
         bulletPool.dispose();
         music.dispose();
+        laserSound.dispose();
         super.dispose();
     }
 
