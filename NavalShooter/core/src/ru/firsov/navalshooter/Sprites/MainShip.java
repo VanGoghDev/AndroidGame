@@ -100,9 +100,6 @@ public class MainShip extends Ship {
                 pressedRight = true;
                 moveRight();
                 break;
-            case Input.Keys.UP:
-                shoot();
-                break;
         }
     }
 
