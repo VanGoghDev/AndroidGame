@@ -34,7 +34,7 @@ public class Ship extends Sprite{
         this.bulletDamage = 1;
     }
 
-    public Ship(BulletPool bulletPool, Sound shootSound) {
+    public Ship(BulletPool bulletPool, Sound shootSound, Rect worldBounds) {
         this.bulletPool = bulletPool;
         this.shootSound = shootSound;
     }

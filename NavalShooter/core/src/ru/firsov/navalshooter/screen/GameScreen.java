@@ -63,13 +63,12 @@ public class GameScreen extends Base2DScreen implements ActionListener {
         background = new Background(new TextureRegion(bg));
         atlas = new TextureAtlas("mainAtlas.tpack");
         star = new Star[STAR_COUNT];
-        //ship = new Ship(atlas, this);
         for (int i = 0; i < star.length; i++) {
             star[i] = new Star(atlas);
         }
         bulletPool = new BulletPool();
         ship = new MainShip(atlas, bulletPool, laserSound);
-        enemyPool = new EnemyPool(bulletPool, bulletSound, ship);
+        enemyPool = new EnemyPool(bulletPool, bulletSound, ship, explosionSound, worldBounds);
         enemiesEmitter = new EnemiesEmitter(enemyPool, atlas, worldBounds);
         explosionPool = new ExplosionPool(atlas, explosionSound);
     }
