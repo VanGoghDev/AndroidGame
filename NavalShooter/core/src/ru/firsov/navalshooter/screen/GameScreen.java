@@ -39,6 +39,7 @@ public class GameScreen extends Base2DScreen implements ActionListener {
     Music music;
     Sound laserSound;
     Sound bulletSound;
+    Sound explosionSound;
 
     EnemyPool enemyPool;
     EnemiesEmitter enemiesEmitter;
@@ -57,6 +58,7 @@ public class GameScreen extends Base2DScreen implements ActionListener {
         music.play();
         laserSound = Gdx.audio.newSound(Gdx.files.internal("sounds/laser.wav"));
         bulletSound = Gdx.audio.newSound(Gdx.files.internal("sounds/bullet.wav"));
+        explosionSound = Gdx.audio.newSound(Gdx.files.internal("sounds/explosion.wav"));
         bg = new Texture("menuBG2.png");
         background = new Background(new TextureRegion(bg));
         atlas = new TextureAtlas("mainAtlas.tpack");
@@ -69,7 +71,7 @@ public class GameScreen extends Base2DScreen implements ActionListener {
         ship = new MainShip(atlas, bulletPool, laserSound);
         enemyPool = new EnemyPool(bulletPool, bulletSound, ship);
         enemiesEmitter = new EnemiesEmitter(enemyPool, atlas, worldBounds);
-        explosionPool = new ExplosionPool(atlas);
+        explosionPool = new ExplosionPool(atlas, explosionSound);
     }
 
     @Override
