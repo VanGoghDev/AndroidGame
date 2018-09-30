@@ -2,6 +2,7 @@ package ru.firsov.navalshooter.screen;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
@@ -12,7 +13,9 @@ import com.badlogic.gdx.math.Vector2;
 
 import ru.firsov.navalshooter.pool.BulletPool;
 import ru.firsov.navalshooter.pool.EnemyPool;
+import ru.firsov.navalshooter.pool.ExplosionPool;
 import ru.firsov.navalshooter.sprites.Background;
+import ru.firsov.navalshooter.sprites.Explosion;
 import ru.firsov.navalshooter.sprites.MainShip;
 import ru.firsov.navalshooter.sprites.Star;
 import ru.firsov.navalshooter.base.ActionListener;
@@ -40,6 +43,8 @@ public class GameScreen extends Base2DScreen implements ActionListener {
     EnemyPool enemyPool;
     EnemiesEmitter enemiesEmitter;
 
+    ExplosionPool explosionPool;
+
     public GameScreen(Game game) {
         super(game);
     }
@@ -64,6 +69,7 @@ public class GameScreen extends Base2DScreen implements ActionListener {
         ship = new MainShip(atlas, bulletPool, laserSound);
         enemyPool = new EnemyPool(bulletPool, bulletSound, ship);
         enemiesEmitter = new EnemiesEmitter(enemyPool, atlas, worldBounds);
+        explosionPool = new ExplosionPool(atlas);
     }
 
     @Override
@@ -82,6 +88,7 @@ public class GameScreen extends Base2DScreen implements ActionListener {
         ship.update(delta);
         bulletPool.updateActiveObjects(delta);
         enemyPool.updateActiveObjects(delta);
+        explosionPool.updateActiveObjects(delta);
         enemiesEmitter.generateEnemies(delta);
     }
 
@@ -96,6 +103,7 @@ public class GameScreen extends Base2DScreen implements ActionListener {
         ship.draw(batch);
         bulletPool.drawActiveObjects(batch);
         enemyPool.drawActiveObjects(batch);
+        explosionPool.drawActiveObjects(batch);
         batch.end();
     }
 
@@ -106,6 +114,7 @@ public class GameScreen extends Base2DScreen implements ActionListener {
     public void deleteAllDestroyed() {
         bulletPool.freeAllDestroyedActiveObjects();
         enemyPool.freeAllDestroyedActiveObjects();
+        explosionPool.freeAllDestroyedActiveObjects();
     }
 
     @Override
@@ -124,6 +133,7 @@ public class GameScreen extends Base2DScreen implements ActionListener {
         atlas.dispose();
         bulletPool.dispose();
         enemyPool.dispose();
+        explosionPool.dispose();
         music.dispose();
         laserSound.dispose();
         super.dispose();
@@ -131,6 +141,12 @@ public class GameScreen extends Base2DScreen implements ActionListener {
 
     @Override
     public boolean keyDown(int keycode) {
+        switch (keycode) {
+            case Input.Keys.UP:
+                Explosion explosion = explosionPool.obtain();
+                explosion.set(0.15f, worldBounds.pos);
+                break;
+        }
         ship.keyDown(keycode);
         return super.keyDown(keycode);
     }
