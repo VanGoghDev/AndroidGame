@@ -18,7 +18,7 @@ public class Base2DScreen implements Screen, InputProcessor {
 
     protected Game game;
     private Rect screenBounds; // pixels
-    private Rect worldBounds; // height = 1f, width = proportion of width/height of device screen
+    protected Rect worldBounds; // height = 1f, width = proportion of width/height of device screen
     private Rect glBounds; //2f x 2f OpenGL default
 
     protected Matrix4 worldToGl;
