@@ -40,7 +40,7 @@ public class EnemiesEmitter {
     private final TextureRegion[] enemyBigRegion;
 
     private final Vector2 enemySmallV = new Vector2(0f, -0.2f);
-    private final Vector2 enemyMediumV = new Vector2(0f, -0.03f);
+    private final Vector2 enemyMediumV = new Vector2(0f, -0.1f);
     private final Vector2 enemyBigV = new Vector2(0f, -0.005f);
 
     private final EnemyPool enemyPool;
@@ -51,6 +51,8 @@ public class EnemiesEmitter {
 
     private float generateInterval = 2f;
     private float generateTimer;
+
+    int level;
 
     public EnemiesEmitter(EnemyPool enemyPool, TextureAtlas atlas, Rect worldBounds) {
         this.enemyPool = enemyPool;
@@ -112,5 +114,13 @@ public class EnemiesEmitter {
             enemy.pos.x = Rnd.nextFloat(worldBounds.getLeft() + enemy.getHalfWidth(), worldBounds.getRight() - enemy.getHalfWidth());
             enemy.setBottom(worldBounds.getTop());
         }
+    }
+
+    public void startNewGame() {
+        level = 1;
+    }
+
+    public int getLevel() {
+        return level;
     }
 }
