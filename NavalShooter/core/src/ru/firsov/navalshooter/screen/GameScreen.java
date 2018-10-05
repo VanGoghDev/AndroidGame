@@ -2,6 +2,7 @@ package ru.firsov.navalshooter.screen;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
@@ -11,12 +12,16 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import ru.firsov.navalshooter.pool.BulletPool;
+import ru.firsov.navalshooter.pool.EnemyPool;
+import ru.firsov.navalshooter.pool.ExplosionPool;
 import ru.firsov.navalshooter.sprites.Background;
+import ru.firsov.navalshooter.sprites.Explosion;
 import ru.firsov.navalshooter.sprites.MainShip;
 import ru.firsov.navalshooter.sprites.Star;
 import ru.firsov.navalshooter.base.ActionListener;
 import ru.firsov.navalshooter.base.Base2DScreen;
 import ru.firsov.navalshooter.math.Rect;
+import ru.firsov.navalshooter.utils.EnemiesEmitter;
 
 public class GameScreen extends Base2DScreen implements ActionListener {
 
@@ -33,6 +38,13 @@ public class GameScreen extends Base2DScreen implements ActionListener {
 
     Music music;
     Sound laserSound;
+    Sound bulletSound;
+    Sound explosionSound;
+
+    EnemyPool enemyPool;
+    EnemiesEmitter enemiesEmitter;
+
+    ExplosionPool explosionPool;
 
     public GameScreen(Game game) {
         super(game);
@@ -45,16 +57,20 @@ public class GameScreen extends Base2DScreen implements ActionListener {
         music.setLooping(true);
         music.play();
         laserSound = Gdx.audio.newSound(Gdx.files.internal("sounds/laser.wav"));
+        bulletSound = Gdx.audio.newSound(Gdx.files.internal("sounds/bullet.wav"));
+        explosionSound = Gdx.audio.newSound(Gdx.files.internal("sounds/explosion.wav"));
         bg = new Texture("menuBG2.png");
         background = new Background(new TextureRegion(bg));
         atlas = new TextureAtlas("mainAtlas.tpack");
         star = new Star[STAR_COUNT];
-        //ship = new Ship(atlas, this);
         for (int i = 0; i < star.length; i++) {
             star[i] = new Star(atlas);
         }
         bulletPool = new BulletPool();
-        ship = new MainShip(atlas, bulletPool, laserSound);
+        explosionPool = new ExplosionPool(atlas, explosionSound);
+        ship = new MainShip(atlas, bulletPool, explosionPool, laserSound);
+        enemyPool = new EnemyPool(bulletPool, explosionPool, bulletSound, ship, explosionSound);
+        enemiesEmitter = new EnemiesEmitter(enemyPool, atlas, worldBounds);
     }
 
     @Override
@@ -72,6 +88,9 @@ public class GameScreen extends Base2DScreen implements ActionListener {
         }
         ship.update(delta);
         bulletPool.updateActiveObjects(delta);
+        enemyPool.updateActiveObjects(delta);
+        explosionPool.updateActiveObjects(delta);
+        enemiesEmitter.generateEnemies(delta);
     }
 
     public void draw() {
@@ -84,6 +103,8 @@ public class GameScreen extends Base2DScreen implements ActionListener {
         }
         ship.draw(batch);
         bulletPool.drawActiveObjects(batch);
+        enemyPool.drawActiveObjects(batch);
+        explosionPool.drawActiveObjects(batch);
         batch.end();
     }
 
@@ -93,6 +114,8 @@ public class GameScreen extends Base2DScreen implements ActionListener {
 
     public void deleteAllDestroyed() {
         bulletPool.freeAllDestroyedActiveObjects();
+        enemyPool.freeAllDestroyedActiveObjects();
+        explosionPool.freeAllDestroyedActiveObjects();
     }
 
     @Override
@@ -110,6 +133,8 @@ public class GameScreen extends Base2DScreen implements ActionListener {
         bg.dispose();
         atlas.dispose();
         bulletPool.dispose();
+        enemyPool.dispose();
+        explosionPool.dispose();
         music.dispose();
         laserSound.dispose();
         super.dispose();
@@ -117,6 +142,12 @@ public class GameScreen extends Base2DScreen implements ActionListener {
 
     @Override
     public boolean keyDown(int keycode) {
+        switch (keycode) {
+            case Input.Keys.UP:
+                Explosion explosion = explosionPool.obtain();
+                explosion.set(0.15f, worldBounds.pos);
+                break;
+        }
         ship.keyDown(keycode);
         return super.keyDown(keycode);
     }
