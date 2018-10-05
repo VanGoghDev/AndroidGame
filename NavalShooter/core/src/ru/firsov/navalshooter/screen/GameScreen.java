@@ -11,10 +11,14 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
+import java.util.List;
+
 import ru.firsov.navalshooter.pool.BulletPool;
 import ru.firsov.navalshooter.pool.EnemyPool;
 import ru.firsov.navalshooter.pool.ExplosionPool;
 import ru.firsov.navalshooter.sprites.Background;
+import ru.firsov.navalshooter.sprites.Bullet;
+import ru.firsov.navalshooter.sprites.Enemy;
 import ru.firsov.navalshooter.sprites.Explosion;
 import ru.firsov.navalshooter.sprites.MainShip;
 import ru.firsov.navalshooter.sprites.Star;
@@ -109,7 +113,48 @@ public class GameScreen extends Base2DScreen implements ActionListener {
     }
 
     public void checkCollisions() {
+        // Столкновение кораблей
+        List<Enemy> enemyList = enemyPool.getActiveObjects();
+        for (Enemy enemy : enemyList) {
+            if (enemy.isDestroyed()) {
+                continue;
+            }
+            float minDist = enemy.getHalfWidth() + ship.getHalfWidth();
+            if (enemy.pos.dst2(ship.pos) < minDist * minDist) {
+                enemy.destroy();
+                enemy.boom();
+                ship.damage(10 * enemy.getBulletDamage());
+                return;
+            }
+        }
 
+        // Попадание пули во вражеский корабль
+        List<Bullet> bulletList = bulletPool.getActiveObjects();
+        for (Enemy enemy : enemyList) {
+            if (enemy.isDestroyed()) {
+                continue;
+            }
+            for (Bullet bullet : bulletList) {
+                if (bullet.getOwner() != ship || bullet.isDestroyed()) {
+                    continue;
+                }
+                if (enemy.isBulletCollision(bullet)) {
+                    bullet.destroy();
+                    enemy.damage(bullet.getDamage());
+                }
+            }
+        }
+
+        // Попадание пули в игровой корабль
+        for (Bullet bullet : bulletList) {
+            if (bullet.getOwner() == ship || bullet.isDestroyed()) {
+                continue;
+            }
+            if (ship.isBulletCollision(bullet)) {
+                ship.damage(bullet.getDamage());
+                bullet.destroy();
+            }
+        }
     }
 
     public void deleteAllDestroyed() {

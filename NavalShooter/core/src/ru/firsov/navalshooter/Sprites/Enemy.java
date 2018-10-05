@@ -27,7 +27,7 @@ public class Enemy extends Ship {
     }
 
     @Override
-    protected void update(float delta) {
+    public void update(float delta) {
         super.update(delta);
         pos.mulAdd(v, delta);
         switch (state) {
@@ -76,5 +76,14 @@ public class Enemy extends Ship {
         v.set(descentV);
         state = State.DESCENT;
         this.worldBounds = worldBounds;
+    }
+
+    public boolean isBulletCollision(Rect bullet) {
+        return !(
+                bullet.getRight() < getLeft()
+                        || bullet.getLeft() > getRight()
+                        || bullet.getBottom() > getTop()
+                        || bullet.getTop() < pos.y
+        );
     }
 }
