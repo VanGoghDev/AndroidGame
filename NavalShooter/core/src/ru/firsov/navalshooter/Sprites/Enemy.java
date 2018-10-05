@@ -11,9 +11,14 @@ import ru.firsov.navalshooter.pool.ExplosionPool;
 
 public class Enemy extends Ship {
 
+    private enum State {DESCENT, FIGHT}
+
     private MainShip mainShip;
 
     private Vector2 v0 = new Vector2();
+    private Vector2 descentV = new Vector2(0, -0.15f);
+
+    private State state;
 
     public Enemy(BulletPool bulletPool, ExplosionPool explosionPool, Sound shootSound, MainShip mainShip) {
         super(bulletPool, explosionPool, shootSound);
@@ -25,14 +30,24 @@ public class Enemy extends Ship {
     protected void update(float delta) {
         super.update(delta);
         pos.mulAdd(v, delta);
-        reloadTimer += delta;
-        if (reloadTimer >= reloadInterval) {
-            reloadTimer = 0f;
-            shoot();
-        }
-        if (getBottom() < worldBounds.getBottom()) {
-            boom();
-            destroy();
+        switch (state) {
+            case DESCENT:
+                if (getTop() <= worldBounds.getTop()) {
+                    v.set(v0);
+                    state = State.FIGHT;
+                }
+                break;
+            case FIGHT:
+                reloadTimer += delta;
+                if (reloadTimer >= reloadInterval) {
+                    reloadTimer = 0f;
+                    shoot();
+                }
+                if (getBottom() < worldBounds.getBottom()) {
+                    boom();
+                    destroy();
+                }
+                break;
         }
     }
 
@@ -58,7 +73,8 @@ public class Enemy extends Ship {
         this.hp = hp;
         setHeightProportion(height);
         reloadTimer = reloadInterval;
-        v.set(v0);
+        v.set(descentV);
+        state = State.DESCENT;
         this.worldBounds = worldBounds;
     }
 }

@@ -11,6 +11,7 @@ import ru.firsov.navalshooter.sprites.Bullet;
 import ru.firsov.navalshooter.sprites.Explosion;
 
 public class Ship extends Sprite{
+
     protected Vector2 v = new Vector2();
 
     protected Rect worldBounds;
