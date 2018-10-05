@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import ru.firsov.navalshooter.base.Ship;
 import ru.firsov.navalshooter.math.Rect;
 import ru.firsov.navalshooter.pool.BulletPool;
+import ru.firsov.navalshooter.pool.ExplosionPool;
 
 public class Enemy extends Ship {
 
@@ -14,8 +15,8 @@ public class Enemy extends Ship {
 
     private Vector2 v0 = new Vector2();
 
-    public Enemy(BulletPool bulletPool, Sound shootSound, MainShip mainShip, Rect worldBounds) {
-        super(bulletPool, shootSound, worldBounds);
+    public Enemy(BulletPool bulletPool, ExplosionPool explosionPool, Sound shootSound, MainShip mainShip) {
+        super(bulletPool, explosionPool, shootSound);
         this.mainShip = mainShip;
         this.v.set(v0);
     }
@@ -27,7 +28,10 @@ public class Enemy extends Ship {
         reloadTimer += delta;
         if (reloadTimer >= reloadInterval) {
             reloadTimer = 0f;
-            //shoot();
+            shoot();
+        }
+        if (getBottom() < worldBounds.getBottom()) {
+            destroy();
         }
     }
 
@@ -40,7 +44,8 @@ public class Enemy extends Ship {
             int bulletDamage,
             float reloadInterval,
             float height,
-            int hp
+            int hp,
+            Rect worldBounds
     ) {
         this.regions = regions;
         this.v0.set(v0);
@@ -53,5 +58,6 @@ public class Enemy extends Ship {
         setHeightProportion(height);
         reloadTimer = reloadInterval;
         v.set(v0);
+        this.worldBounds = worldBounds;
     }
 }

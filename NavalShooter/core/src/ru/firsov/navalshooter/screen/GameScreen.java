@@ -67,10 +67,10 @@ public class GameScreen extends Base2DScreen implements ActionListener {
             star[i] = new Star(atlas);
         }
         bulletPool = new BulletPool();
-        ship = new MainShip(atlas, bulletPool, laserSound);
-        enemyPool = new EnemyPool(bulletPool, bulletSound, ship, explosionSound, worldBounds);
-        enemiesEmitter = new EnemiesEmitter(enemyPool, atlas, worldBounds);
         explosionPool = new ExplosionPool(atlas, explosionSound);
+        ship = new MainShip(atlas, bulletPool, explosionPool, laserSound);
+        enemyPool = new EnemyPool(bulletPool, explosionPool, bulletSound, ship, explosionSound);
+        enemiesEmitter = new EnemiesEmitter(enemyPool, atlas, worldBounds);
     }
 
     @Override

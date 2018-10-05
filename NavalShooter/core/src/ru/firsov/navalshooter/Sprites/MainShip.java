@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import ru.firsov.navalshooter.base.Ship;
 import ru.firsov.navalshooter.math.Rect;
 import ru.firsov.navalshooter.pool.BulletPool;
+import ru.firsov.navalshooter.pool.ExplosionPool;
 
 public class MainShip extends Ship {
 
@@ -20,8 +21,8 @@ public class MainShip extends Ship {
     private int leftPointer = INVALID_POINTER;
     private int rightPointer = INVALID_POINTER;
 
-    public MainShip(TextureAtlas atlas, BulletPool bulletPool, Sound shootSound) {
-        super(atlas.findRegion("main_ship"), 1, 2, 2, bulletPool, shootSound);
+    public MainShip(TextureAtlas atlas, BulletPool bulletPool, ExplosionPool explosionPool, Sound shootSound) {
+        super(atlas.findRegion("main_ship"), 1, 2, 2, bulletPool, explosionPool, shootSound);
         this.bulletRegion = atlas.findRegion("bulletMainShip");
         this.bulletHeight = 0.01f;
         this.bulletDamage = 1;
