@@ -202,6 +202,7 @@ public class GameScreen extends Base2DScreen implements ActionListener {
 
     @Override
     public void dispose() {
+        super.dispose();
         bg.dispose();
         atlas.dispose();
         bulletPool.dispose();
@@ -209,7 +210,6 @@ public class GameScreen extends Base2DScreen implements ActionListener {
         explosionPool.dispose();
         music.dispose();
         laserSound.dispose();
-        super.dispose();
     }
 
     @Override
@@ -232,6 +232,8 @@ public class GameScreen extends Base2DScreen implements ActionListener {
     public boolean touchDown(Vector2 touch, int pointer) {
         if (state == State.PLAYING) {
             ship.touchDown(touch, pointer);
+        } else {
+            buttonNewGame.touchDown(touch, pointer);
         }
         return super.touchUp(touch, pointer);
     }
@@ -240,14 +242,16 @@ public class GameScreen extends Base2DScreen implements ActionListener {
     public boolean touchUp(Vector2 touch, int pointer) {
         if (state == State.PLAYING) {
             ship.touchUp(touch, pointer);
+        } else {
+            buttonNewGame.touchUp(touch, pointer);
         }
         return super.touchUp(touch, pointer);
     }
 
     @Override
     public void actionPerformed(Object src) {
-        if (src == ship) {
-            System.out.println("hey");
+        if (src == buttonNewGame) {
+            startNewGame();
         }
     }
 
@@ -257,7 +261,7 @@ public class GameScreen extends Base2DScreen implements ActionListener {
         ship.startNewGame();
         enemiesEmitter.startNewGame();
         bulletPool.freeAllDestroyedActiveObjects();
-        explosionPool.freeAllActiveObjects();
         enemyPool.freeAllActiveObjects();
+        explosionPool.freeAllActiveObjects();
     }
 }
