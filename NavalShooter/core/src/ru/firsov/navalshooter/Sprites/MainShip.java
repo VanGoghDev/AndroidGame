@@ -24,12 +24,17 @@ public class MainShip extends Ship {
     public MainShip(TextureAtlas atlas, BulletPool bulletPool, ExplosionPool explosionPool, Sound shootSound) {
         super(atlas.findRegion("main_ship"), 1, 2, 2, bulletPool, explosionPool, shootSound);
         this.bulletRegion = atlas.findRegion("bulletMainShip");
+        startNewGame();
+    }
+
+    public void startNewGame() {
         this.bulletHeight = 0.01f;
         this.bulletDamage = 1;
         this.bulletV.set(0, 0.5f);
         this.reloadInterval = 0.2f;
         this.hp = 100;
         setHeightProportion(0.15f);
+        flushDestroy();
     }
 
     @Override
