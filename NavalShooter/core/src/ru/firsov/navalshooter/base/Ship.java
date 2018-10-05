@@ -11,6 +11,7 @@ import ru.firsov.navalshooter.sprites.Bullet;
 import ru.firsov.navalshooter.sprites.Explosion;
 
 public class Ship extends Sprite{
+
     protected Vector2 v = new Vector2();
 
     protected Rect worldBounds;
@@ -26,6 +27,9 @@ public class Ship extends Sprite{
 
     protected float reloadInterval;
     protected float reloadTimer;
+
+    protected float damageAnimateInterval = 0.1f;
+    protected float damageAnimateTimer;
 
     protected int hp;
 
@@ -47,6 +51,15 @@ public class Ship extends Sprite{
     }
 
     @Override
+    public void update(float delta) {
+        super.update(delta);
+        damageAnimateTimer += delta;
+        if (damageAnimateTimer >= damageAnimateInterval) {
+            frame = 0;
+        }
+    }
+
+    @Override
     public void resize(Rect worldBounds) {
         this.worldBounds = worldBounds;
     }
@@ -60,5 +73,28 @@ public class Ship extends Sprite{
     public void boom() {
         Explosion explosion = explosionPool.obtain();
         explosion.set(getHeight(), pos);
+        hp = 0;
+    }
+
+    public int getHp() {
+        return hp;
+    }
+
+    public void setHp(int hp) {
+        this.hp = hp;
+    }
+
+    public void damage(int damage) {
+        frame = 1;
+        damageAnimateTimer = 0f;
+        hp -= damage;
+        if (hp <= 0) {
+            boom();
+            destroy();
+        }
+    }
+
+    public int getBulletDamage() {
+        return bulletDamage;
     }
 }

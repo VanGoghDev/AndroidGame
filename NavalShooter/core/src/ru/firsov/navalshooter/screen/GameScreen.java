@@ -11,12 +11,19 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
+import java.awt.Button;
+import java.util.List;
+
 import ru.firsov.navalshooter.pool.BulletPool;
 import ru.firsov.navalshooter.pool.EnemyPool;
 import ru.firsov.navalshooter.pool.ExplosionPool;
 import ru.firsov.navalshooter.sprites.Background;
+import ru.firsov.navalshooter.sprites.Bullet;
+import ru.firsov.navalshooter.sprites.ButtonNewGame;
+import ru.firsov.navalshooter.sprites.Enemy;
 import ru.firsov.navalshooter.sprites.Explosion;
 import ru.firsov.navalshooter.sprites.MainShip;
+import ru.firsov.navalshooter.sprites.MessageGameOver;
 import ru.firsov.navalshooter.sprites.Star;
 import ru.firsov.navalshooter.base.ActionListener;
 import ru.firsov.navalshooter.base.Base2DScreen;
@@ -26,6 +33,8 @@ import ru.firsov.navalshooter.utils.EnemiesEmitter;
 public class GameScreen extends Base2DScreen implements ActionListener {
 
     private static final int STAR_COUNT = 250;
+
+    private enum State {PLAYING, GAME_OVER}
 
     Background background;
     Texture bg;
@@ -45,6 +54,11 @@ public class GameScreen extends Base2DScreen implements ActionListener {
     EnemiesEmitter enemiesEmitter;
 
     ExplosionPool explosionPool;
+
+    State state;
+
+    MessageGameOver messageGameOver;
+    ButtonNewGame buttonNewGame;
 
     public GameScreen(Game game) {
         super(game);
@@ -71,6 +85,9 @@ public class GameScreen extends Base2DScreen implements ActionListener {
         ship = new MainShip(atlas, bulletPool, explosionPool, laserSound);
         enemyPool = new EnemyPool(bulletPool, explosionPool, bulletSound, ship, explosionSound);
         enemiesEmitter = new EnemiesEmitter(enemyPool, atlas, worldBounds);
+        messageGameOver = new MessageGameOver(atlas);
+        buttonNewGame = new ButtonNewGame(atlas, this);
+        startNewGame();
     }
 
     @Override
@@ -86,11 +103,21 @@ public class GameScreen extends Base2DScreen implements ActionListener {
         for (int i = 0; i < star.length; i++) {
             star[i].update(delta);
         }
-        ship.update(delta);
-        bulletPool.updateActiveObjects(delta);
-        enemyPool.updateActiveObjects(delta);
+
         explosionPool.updateActiveObjects(delta);
-        enemiesEmitter.generateEnemies(delta);
+        if (ship.isDestroyed()) {
+            state = State.GAME_OVER;
+        }
+        switch(state) {
+            case PLAYING:
+                ship.update(delta);
+                bulletPool.updateActiveObjects(delta);
+                enemyPool.updateActiveObjects(delta);
+                enemiesEmitter.generateEnemies(delta);
+                break;
+            case GAME_OVER:
+                break;
+        }
     }
 
     public void draw() {
@@ -105,11 +132,56 @@ public class GameScreen extends Base2DScreen implements ActionListener {
         bulletPool.drawActiveObjects(batch);
         enemyPool.drawActiveObjects(batch);
         explosionPool.drawActiveObjects(batch);
+        if (state == State.GAME_OVER) {
+            messageGameOver.draw(batch);
+            buttonNewGame.draw(batch);
+        }
         batch.end();
     }
 
     public void checkCollisions() {
+        // Столкновение кораблей
+        List<Enemy> enemyList = enemyPool.getActiveObjects();
+        for (Enemy enemy : enemyList) {
+            if (enemy.isDestroyed()) {
+                continue;
+            }
+            float minDist = enemy.getHalfWidth() + ship.getHalfWidth();
+            if (enemy.pos.dst2(ship.pos) < minDist * minDist) {
+                enemy.destroy();
+                enemy.boom();
+                ship.damage(10 * enemy.getBulletDamage());
+                return;
+            }
+        }
 
+        // Попадание пули во вражеский корабль
+        List<Bullet> bulletList = bulletPool.getActiveObjects();
+        for (Enemy enemy : enemyList) {
+            if (enemy.isDestroyed()) {
+                continue;
+            }
+            for (Bullet bullet : bulletList) {
+                if (bullet.getOwner() != ship || bullet.isDestroyed()) {
+                    continue;
+                }
+                if (enemy.isBulletCollision(bullet)) {
+                    bullet.destroy();
+                    enemy.damage(bullet.getDamage());
+                }
+            }
+        }
+
+        // Попадание пули в игровой корабль
+        for (Bullet bullet : bulletList) {
+            if (bullet.getOwner() == ship || bullet.isDestroyed()) {
+                continue;
+            }
+            if (ship.isBulletCollision(bullet)) {
+                ship.damage(bullet.getDamage());
+                bullet.destroy();
+            }
+        }
     }
 
     public void deleteAllDestroyed() {
@@ -130,6 +202,7 @@ public class GameScreen extends Base2DScreen implements ActionListener {
 
     @Override
     public void dispose() {
+        super.dispose();
         bg.dispose();
         atlas.dispose();
         bulletPool.dispose();
@@ -137,43 +210,58 @@ public class GameScreen extends Base2DScreen implements ActionListener {
         explosionPool.dispose();
         music.dispose();
         laserSound.dispose();
-        super.dispose();
     }
 
     @Override
     public boolean keyDown(int keycode) {
-        switch (keycode) {
-            case Input.Keys.UP:
-                Explosion explosion = explosionPool.obtain();
-                explosion.set(0.15f, worldBounds.pos);
-                break;
+        if (state == State.PLAYING) {
+            ship.keyDown(keycode);
         }
-        ship.keyDown(keycode);
         return super.keyDown(keycode);
     }
 
     @Override
     public boolean keyUp(int keycode) {
-        ship.keyUp(keycode);
+        if (state == State.PLAYING) {
+            ship.keyUp(keycode);
+        }
         return super.keyUp(keycode);
     }
 
     @Override
     public boolean touchDown(Vector2 touch, int pointer) {
-        ship.touchDown(touch, pointer);
+        if (state == State.PLAYING) {
+            ship.touchDown(touch, pointer);
+        } else {
+            buttonNewGame.touchDown(touch, pointer);
+        }
         return super.touchUp(touch, pointer);
     }
 
     @Override
     public boolean touchUp(Vector2 touch, int pointer) {
-        ship.touchUp(touch, pointer);
+        if (state == State.PLAYING) {
+            ship.touchUp(touch, pointer);
+        } else {
+            buttonNewGame.touchUp(touch, pointer);
+        }
         return super.touchUp(touch, pointer);
     }
 
     @Override
     public void actionPerformed(Object src) {
-        if (src == ship) {
-            System.out.println("hey");
+        if (src == buttonNewGame) {
+            startNewGame();
         }
+    }
+
+    private void startNewGame() {
+        state = State.PLAYING;
+
+        ship.startNewGame();
+        enemiesEmitter.startNewGame();
+        bulletPool.freeAllDestroyedActiveObjects();
+        enemyPool.freeAllActiveObjects();
+        explosionPool.freeAllActiveObjects();
     }
 }

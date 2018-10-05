@@ -31,7 +31,7 @@ public class EnemiesEmitter {
     private static float ENEMY_BIG_BULLET_VY = -0.3f;
     private static int ENEMY_BIG_BULLET_DAMAGE = 10;
     private static float ENEMY_BIG_RELOAD_INTERVAL = 3f;
-    private static int ENEMY_BIG_HP = 10;
+    private static int ENEMY_BIG_HP = 20;
 
     private Sound shootSound;
 
