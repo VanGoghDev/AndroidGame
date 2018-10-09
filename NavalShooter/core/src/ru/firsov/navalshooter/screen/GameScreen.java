@@ -230,9 +230,8 @@ public class GameScreen extends Base2DScreen implements ActionListener {
 
     @Override
     public boolean touchDown(Vector2 touch, int pointer) {
-        if (state == State.PLAYING) {
-            ship.touchDown(touch, pointer);
-        } else {
+        ship.touchDown(touch, pointer);
+        if (state == State.GAME_OVER) {
             buttonNewGame.touchDown(touch, pointer);
         }
         return super.touchUp(touch, pointer);
@@ -240,9 +239,8 @@ public class GameScreen extends Base2DScreen implements ActionListener {
 
     @Override
     public boolean touchUp(Vector2 touch, int pointer) {
-        if (state == State.PLAYING) {
-            ship.touchUp(touch, pointer);
-        } else {
+        ship.touchUp(touch, pointer);
+        if (state == State.GAME_OVER) {
             buttonNewGame.touchUp(touch, pointer);
         }
         return super.touchUp(touch, pointer);
@@ -260,6 +258,7 @@ public class GameScreen extends Base2DScreen implements ActionListener {
 
         ship.startNewGame();
         enemiesEmitter.startNewGame();
+
         bulletPool.freeAllDestroyedActiveObjects();
         enemyPool.freeAllActiveObjects();
         explosionPool.freeAllActiveObjects();
