@@ -9,3 +9,6 @@ My first android project. This is the game like a normal space invaders game :sp
   - [ ] Add new enemies model (important :heavy_exclamation_mark:)
   - [ ] Add new background picture (important :heavy_exclamation_mark:)
   - [ ] Add new bullet images (not really )
+
+
+important: :heavy_exclamation_mark:
