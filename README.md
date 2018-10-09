@@ -5,9 +5,9 @@ My first android project. This is the game like a normal space invaders game :sp
 
 ### Bucket list
 - Graphics 
-  - [ ] Add new model of player ship (important :heavy_exclamation_mark:) 
-  - [ ] Add new enemies model (important :heavy_exclamation_mark:)
-  - [ ] Add new background picture (important :heavy_exclamation_mark:)
+  - [ ] Add new model of player ship :heavy_exclamation_mark: 
+  - [ ] Add new enemies model :heavy_exclamation_mark:
+  - [ ] Add new background picture :heavy_exclamation_mark:
   - [ ] Add new bullet images (not really )
 
 
