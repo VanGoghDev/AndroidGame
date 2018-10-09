@@ -8,7 +8,8 @@ My first android project. This is the game like a normal space invaders game :sp
   - [ ] Add new model of player ship :heavy_exclamation_mark: 
   - [ ] Add new enemies model :heavy_exclamation_mark:
   - [ ] Add new background picture :heavy_exclamation_mark:
-  - [ ] Add new bullet images (not really )
+  - [ ] Add new bullet images
+  - [ ] Add new buttons images (not sure)
 
-
-important: :heavy_exclamation_mark:
+1. important: :heavy_exclamation_mark:
+2. not really: 
