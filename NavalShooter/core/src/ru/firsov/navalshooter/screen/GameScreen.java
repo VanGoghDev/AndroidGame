@@ -12,7 +12,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
 
-import java.awt.Button;
 import java.util.List;
 
 import ru.firsov.navalshooter.base.Font;
@@ -128,7 +127,7 @@ public class GameScreen extends Base2DScreen implements ActionListener {
                 ship.update(delta);
                 bulletPool.updateActiveObjects(delta);
                 enemyPool.updateActiveObjects(delta);
-                enemiesEmitter.generateEnemies(delta);
+                enemiesEmitter.generateEnemies(delta, frags);
                 break;
             case GAME_OVER:
                 break;
@@ -157,11 +156,11 @@ public class GameScreen extends Base2DScreen implements ActionListener {
 
     private void printInfo() {
         sbFrags.setLength(0);
-        font.draw(batch, sbFrags.append(FRAGS).append(frags), worldBounds.getLeft(), worldBounds.getTop(), Align.left);
+        font.draw(batch, sbFrags.append(FRAGS).append(frags), worldBounds.getLeft(), worldBounds.getTop() - 0.01f, Align.left);
         sbHP.setLength(0);
-        font.draw(batch, sbHP.append(HP).append(ship.getHp()), worldBounds.pos.x, worldBounds.getTop(), Align.center);
+        font.draw(batch, sbHP.append(HP).append(ship.getHp()), worldBounds.pos.x, worldBounds.getTop() - 0.01f, Align.center);
         sbLevel.setLength(0);
-        font.draw(batch, sbLevel.append(LEVEL).append(1), worldBounds.getRight(), worldBounds.getTop(), Align.right);
+        font.draw(batch, sbLevel.append(LEVEL).append(enemiesEmitter.getLevel()), worldBounds.getRight(), worldBounds.getTop() - 0.01f, Align.right);
     }
 
     public void checkCollisions() {
@@ -283,11 +282,10 @@ public class GameScreen extends Base2DScreen implements ActionListener {
 
     private void startNewGame() {
         state = State.PLAYING;
-
+        ship.startNewGame();
         frags = 0;
 
-        ship.startNewGame();
-        enemiesEmitter.startNewGame();
+        enemiesEmitter.setLevel(1);
 
         bulletPool.freeAllDestroyedActiveObjects();
         enemyPool.freeAllActiveObjects();
