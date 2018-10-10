@@ -20,6 +20,7 @@ public class MainShip extends Ship {
 
     private int leftPointer = INVALID_POINTER;
     private int rightPointer = INVALID_POINTER;
+    private boolean isNewGame = false;
 
     public MainShip(TextureAtlas atlas, BulletPool bulletPool, ExplosionPool explosionPool, Sound shootSound) {
         super(atlas.findRegion("main_ship"), 1, 2, 2, bulletPool, explosionPool, shootSound);
@@ -33,6 +34,7 @@ public class MainShip extends Ship {
         this.bulletV.set(0, 0.5f);
         this.reloadInterval = 0.2f;
         this.hp = 100;
+        this.isNewGame = true;
         setHeightProportion(0.15f);
         flushDestroy();
     }
@@ -53,6 +55,10 @@ public class MainShip extends Ship {
         if (getLeft() < worldBounds.getLeft()) {
             setLeft(worldBounds.getLeft());
             stop();
+        }
+        if (isNewGame) {
+            this.pos.x = 0;
+            this.isNewGame = false;
         }
     }
 

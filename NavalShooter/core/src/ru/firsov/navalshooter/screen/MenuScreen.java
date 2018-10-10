@@ -33,10 +33,10 @@ public class MenuScreen extends Base2DScreen implements ActionListener{
     @Override
     public void show(){
         super.show();
-        bg = new Texture("menuBG.png");
+        bg = new Texture("textures/backGround.png");
         pos = new Vector2(0f,0f);
         background = new Background(new TextureRegion(bg));
-        atlas = new TextureAtlas("buttonAtlas.pack");
+        atlas = new TextureAtlas("textures/buttonAtlas.pack");
         buttonPlay = new ButtonPlay(atlas, this);
         buttonQuit = new ButtonQuit(atlas, this);
     }

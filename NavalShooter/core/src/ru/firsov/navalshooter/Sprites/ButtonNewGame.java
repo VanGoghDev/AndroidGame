@@ -1,7 +1,6 @@
 package ru.firsov.navalshooter.sprites;
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import ru.firsov.navalshooter.base.ActionListener;
 import ru.firsov.navalshooter.base.ScaledTouchUpButton;
