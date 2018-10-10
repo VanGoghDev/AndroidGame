@@ -26,9 +26,9 @@ In order to use position system comfortably, I have created a ```Rect``` class a
 All this utils, you can find at math package :file_folder:
 
 #### Screens
-I have two classes of ```Screen``` 
+I have two classes of ```Screen```. MenuScreen and GameScreen. Constructor calls ```super(game)```, where ```Game game```. First one, welcomes you into the game (at this moment, you can only start new game or exit). Second one, is the one which collects all objects, game logic at one place
 
 #### Sprites
 Moreover, to draw objects, I have created a class, called ```Sprite```. Here you can call the ***constructor*** with ```TextureRegion``` as a parameter, or even you can call another ***constructor*** for a texture which contains several images. All you need is to give rows and columns of your texture and it will split your image into parts and store it. It also has methods which will allow you to move your image on the screen, ```touchUp``` and ```touchDown``` buttons for some ```ActionPerfomed``` methods.
 
-All models, such as buttons, ship, enemies extended from ```Sprite``` class.
+All objects, such as buttons, ship, enemies extended from ```Sprite``` class.
