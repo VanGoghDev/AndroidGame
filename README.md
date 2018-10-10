@@ -17,7 +17,13 @@ My first android project. This is the game like a normal space invaders game :sp
 ### Architecture 	:building_construction:
 #### Basics
 To start with, I want to speak about position system. 
-Here, we have 3 base coordinate systems:
+Here, we have 3 base **coordinate systems**:
   1. Pixels
   2. WorldBounds
   3. OpenGl default bounds
+  
+In order to use position system comfortably, I have created a ```Rect``` class and ```MatrixUtils``` class, where I can switch between coordinate systems. ```Rect``` class is a class, where I can use methods such as ```setBottom```, ```setWidth``` and so on.
+All this utils, you can find at math package :file_folder
+
+#### Sprites
+In order, to draw objects, I have created a class, called ```Sprite```.
