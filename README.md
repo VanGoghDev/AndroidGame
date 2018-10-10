@@ -27,3 +27,5 @@ All this utils, you can find at math package :file_folder:
 
 #### Sprites
 In order, to draw objects, I have created a class, called ```Sprite```. Here you can call the ***constructor*** with ```TextureRegion``` as a parameter, or even you can call another ***constructor*** for a texture which contains several images. All you need is to give rows and columns of your texture and it will split your image into parts and store it. It also has methods which will allow you to move your image on the screen, ```touchUp``` and ```touchDown``` buttons for some ```ActionPerfomed``` methods.
+
+All models, such as buttons, ship, enemies extended from ```Sprite``` class.
